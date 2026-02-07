@@ -1,0 +1,10 @@
+{
+  "name": "saint-valentin-jeux",
+  "version": "1.0.0",
+  "description": "Appli web Saint Valentin avec 7 jeux quotidiens",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

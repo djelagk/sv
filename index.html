@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Saint Valentin – 7 jours, 7 jeux</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <h1>Saint Valentin de Lisa</h1>
+        <p>Petit chat, 7 jours, 7 jeux. Un petit défi chaque jour jusqu’au 14.</p>
+      </header>
+
+      <section class="days">
+        <h2>Calendrier</h2>
+        <div id="dayList" class="day-list" aria-live="polite"></div>
+        <div class="hint" id="unlockHint"></div>
+      </section>
+
+      <section class="game">
+        <h2 id="gameTitle">Choisis un jour</h2>
+        <div id="gameContent" class="game-content"></div>
+      </section>
+    </div>
+
+    <footer class="footer">
+      <p>Fait avec ❤ pour Lisa, mon petit chat</p>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
