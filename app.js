@@ -79,7 +79,7 @@ const games = [
       container.innerHTML = `
         <div class="game-panel">
           <h3>Coeur éclatant</h3>
-          <p>Clique 10 fois sur le coeur en moins de 10 secondes.</p>
+          <p>Clique 10 fois sur le coeur en moins de 3 secondes.</p>
           <div class="btn-row">
             <button class="btn" id="startHeart">Demarrer</button>
             <span id="timer" class="hint"></span>
@@ -97,12 +97,12 @@ const games = [
       const resultEl = container.querySelector("#result");
 
       let clicks = 0;
-      let remaining = 10;
+      let remaining = 3;
       let intervalId = null;
 
       const reset = () => {
         clicks = 0;
-        remaining = 10;
+        remaining = 3;
         timerEl.textContent = "";
         resultEl.textContent = "";
         heartBtn.disabled = true;
@@ -112,7 +112,7 @@ const games = [
         if (intervalId) clearInterval(intervalId);
         reset();
         heartBtn.disabled = false;
-        timerEl.textContent = "10s";
+        timerEl.textContent = "3s";
         intervalId = setInterval(() => {
           remaining -= 1;
           timerEl.textContent = `${remaining}s`;
