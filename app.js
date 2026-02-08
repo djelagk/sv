@@ -21,7 +21,8 @@ const startOfDay = (date) =>
 const addDays = (date, days) => new Date(date.getTime() + days * MS_PER_DAY);
 
 const now = startOfDay(new Date());
-const days = Array.from({ length: 7 }, (_, i) => addDays(now, i));
+const fixedStart = new Date(2026, 1, 8);
+const days = Array.from({ length: 7 }, (_, i) => addDays(fixedStart, i));
 const kissReward = () => {
   const n = new Date().getDate();
   return `Petit chat a gagne ${n} seconde${n > 1 ? "s" : ""} de bisou.`;
@@ -355,12 +356,12 @@ const games = [
       const kissBar = container.querySelector("#kissBar");
 
       const today = new Date();
-      const isSaturday = today.getDay() === 6;
+      const isWeekend = today.getDay() === 6 || today.getDay() === 0;
 
-      if (!isSaturday) {
+      if (!isWeekend) {
         kissArea.innerHTML = `
-          <p>Ce jeu est reserve au samedi pour un bisou parfait.</p>
-          <div class="hint">Reviens samedi pour le debloquer.</div>
+          <p>Ce jeu est reserve au week-end pour un bisou parfait.</p>
+          <div class="hint">Reviens samedi ou dimanche pour le debloquer.</div>
         `;
         return () => {};
       }
