@@ -12,17 +12,14 @@ Puis ouvre : `http://localhost:3000`
 
 ## Mode dev (tout debloquer)
 
-- URL : `http://localhost:3000/?dev=1`
-- Ou via la console navigateur :
+- URL : `http://localhost:3000/?unlock=petitchat`
+- Ou version persistante : `http://localhost:3000/unlock?token=petitchat`
 
-```js
-localStorage.setItem("sv_dev_unlock", "1");
-```
+Pour changer le code secret :
 
-Pour desactiver :
-
-```js
-localStorage.removeItem("sv_dev_unlock");
+```bash
+set UNLOCK_TOKEN=ton-code
+npm start
 ```
 
 ## Contenu
@@ -31,6 +28,7 @@ localStorage.removeItem("sv_dev_unlock");
 - `styles.css` : styles
 - `app.js` : logique des jeux
 - `server.js` : serveur Node
+- `watchdog.sh` : relance auto + tunnel
 
 ## Partage public (LocalTunnel)
 
@@ -43,3 +41,30 @@ Sous-domaine personnalise :
 ```bash
 npx localtunnel --port 3000 --subdomain ton-nom
 ```
+
+## Logs
+
+Toutes les tentatives sont journalisees dans `access.log`.
+
+Consulter via URL :
+
+```
+http://localhost:3000/logs?token=petitchatlogs
+```
+
+Changer le token :
+
+```bash
+set LOGS_TOKEN=ton-token
+npm start
+```
+
+## Watchdog (auto-relance + tunnel)
+
+```bash
+npm run watch
+```
+
+Variables utiles :
+- `TUNNEL_SUBDOMAIN` (defaut: `petitchat`)
+- `CHECK_INTERVAL_MS` (defaut: `15000`)

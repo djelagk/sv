@@ -6,9 +6,7 @@ const unlockHint = document.getElementById("unlockHint");
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 let cleanupFn = null;
 
-const params = new URLSearchParams(window.location.search);
-const devUnlockAll =
-  params.has("dev") || localStorage.getItem("sv_dev_unlock") === "1";
+const devUnlockAll = window.__UNLOCK__ === true;
 
 const formatDate = (date) =>
   date.toLocaleDateString("fr-FR", {
@@ -24,6 +22,10 @@ const addDays = (date, days) => new Date(date.getTime() + days * MS_PER_DAY);
 
 const now = startOfDay(new Date());
 const days = Array.from({ length: 7 }, (_, i) => addDays(now, i));
+const kissReward = () => {
+  const n = new Date().getDate();
+  return `Petit chat a gagne ${n} seconde${n > 1 ? "s" : ""} de bisou.`;
+};
 
 const games = [
   {
@@ -64,7 +66,7 @@ const games = [
       noBtn.addEventListener("click", moveNo);
       yesBtn.addEventListener("click", () => {
         answer.textContent =
-          "Yesss ! petit chat , rendez-vous le 14 pour la surprise finale. Reviens chaque jour pour jouer un nouveau jeu.";
+          `Yesss ! petit chat , rendez-vous le 14 pour la surprise finale. Reviens chaque jour pour jouer un nouveau jeu. ${kissReward()}`;
       });
 
       return () => {};
@@ -118,7 +120,7 @@ const games = [
             clearInterval(intervalId);
             heartBtn.disabled = true;
             if (clicks >= 10) {
-              resultEl.textContent = "Bravo ! Coeur illumine.";
+              resultEl.textContent = `Bravo ! Coeur illumine. ${kissReward()}`;
             } else {
               resultEl.textContent = "Presque ! Reessaie.";
             }
@@ -129,7 +131,7 @@ const games = [
       heartBtn.addEventListener("click", () => {
         clicks += 1;
         if (clicks >= 10) {
-          resultEl.textContent = "Bravo ! Tu as reussi.";
+          resultEl.textContent = `Bravo ! Tu as reussi. ${kissReward()}`;
         }
       });
       startBtn.addEventListener("click", start);
@@ -168,7 +170,7 @@ const games = [
 
       check.addEventListener("click", () => {
         if (input.value.trim().toLowerCase() === word) {
-          result.textContent = "Parfait !";
+          result.textContent = `Parfait ! ${kissReward()}`;
         } else {
           result.textContent = "Pas encore. Reessaie.";
         }
@@ -226,7 +228,7 @@ const games = [
         if (answers.q3 === "a") score += 1;
 
         if (score === 3) {
-          result.textContent = "Tu as tout bon. Tu es adorable, petit chat.";
+          result.textContent = `Tu as tout bon. Tu es adorable, petit chat. ${kissReward()}`;
         } else {
           result.textContent = `Score: ${score}/3. Reessaie  ?`;
         }
@@ -263,7 +265,7 @@ const games = [
           return;
         }
         if (value === secret) {
-          result.textContent = `Bravo ! C'etait ${secret}.`;
+          result.textContent = `Bravo ! C'etait ${secret}. ${kissReward()}`;
           btn.disabled = true;
         } else if (value < secret) {
           result.textContent = "Plus grand.";
@@ -316,7 +318,7 @@ const games = [
         startTime = null;
         result.textContent = `Temps: ${reaction} ms. ${
           reaction < 350 ? "Ultra rapide !" : "Bien joue !"
-        }`;
+        } ${kissReward()}`;
       });
 
       return () => {
@@ -383,7 +385,7 @@ const games = [
         if (elapsed >= durationMs) {
           reset();
           kissResult.textContent =
-            "Bisou de 14 secondes valide. Tu es mon petit chat, Lisa.";
+            `Bisou de 14 secondes valide. Tu es mon petit chat, Lisa. ${kissReward()}`;
         }
       };
 
