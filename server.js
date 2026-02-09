@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3005;
 const BASE_DIR = path.resolve(__dirname);
 const LOG_FILE = path.join(BASE_DIR, "access.log");
 const UNLOCK_TOKEN = process.env.UNLOCK_TOKEN || "petitchat";

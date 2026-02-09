@@ -7,6 +7,8 @@ const MS_PER_DAY = 24 * 60 * 60 * 1000;
 let cleanupFn = null;
 
 const devUnlockAll = window.__UNLOCK__ === true;
+let secretUnlock = false;
+const allUnlocked = () => devUnlockAll || secretUnlock;
 
 const formatDate = (date) =>
   date.toLocaleDateString("fr-FR", {
@@ -158,6 +160,7 @@ const games = [
           <h3>Mot melange</h3>
           <p>Remets la phrase dans le bon ordre :</p>
           <p><strong>${scrambled}</strong></p>
+          <p class="hint">Indice : 🍑</p>
           <input class="input" id="wordInput" placeholder="Ta reponse exacte" />
           <div class="btn-row">
             <button class="btn" id="checkWord">Verifier</button>
@@ -426,7 +429,7 @@ const renderDays = () => {
   let nextLocked = null;
 
   days.forEach((date, index) => {
-    const unlocked = devUnlockAll || now >= date;
+    const unlocked = allUnlocked() || now >= date;
     const allowClick = unlocked || index === 0;
     if (!unlocked && !nextLocked) nextLocked = date;
     const card = document.createElement("div");
@@ -448,9 +451,9 @@ const renderDays = () => {
     dayList.appendChild(card);
   });
 
-  if (devUnlockAll) {
+  if (allUnlocked()) {
     unlockHint.textContent =
-      "Mode dev actif : tous les jeux sont debloques.";
+      devUnlockAll ? "Mode dev actif : tous les jeux sont debloques." : "Tous les jeux sont debloques.";
   } else if (nextLocked) {
     unlockHint.textContent = `Prochain jeu dispo le ${formatDate(nextLocked)}.`;
   } else {
@@ -467,3 +470,21 @@ const openGame = (index) => {
 };
 
 renderDays();
+
+(function () {
+  const footer = document.querySelector(".footer p");
+  if (!footer) return;
+  let clicks = 0;
+  let timer = null;
+  footer.addEventListener("click", () => {
+    clicks += 1;
+    if (timer) clearTimeout(timer);
+    if (clicks >= 3) {
+      clicks = 0;
+      secretUnlock = true;
+      renderDays();
+    } else {
+      timer = setTimeout(() => { clicks = 0; }, 400);
+    }
+  });
+})();
