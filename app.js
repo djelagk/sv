@@ -23,7 +23,8 @@ const addDays = (date, days) => new Date(date.getTime() + days * MS_PER_DAY);
 const now = startOfDay(new Date());
 const fixedStart = new Date(2026, 1, 8);
 const days = Array.from({ length: 7 }, (_, i) => addDays(fixedStart, i));
-const kissReward = () => {
+const getReward = (dayIndex) => {
+  if (dayIndex === 2) return "Petit chat a gagné un massage des pieds.";
   const n = new Date().getDate();
   return `Petit chat a gagne ${n} seconde${n > 1 ? "s" : ""} de bisou.`;
 };
@@ -32,7 +33,7 @@ const games = [
   {
     id: 1,
     title: "Lisa, will you be my valentine ?",
-    render(container) {
+    render(container, dayIndex) {
       container.innerHTML = `
         <div class="game-panel">
           <h3>Lisa, will you be my valentine ?</h3>
@@ -67,7 +68,7 @@ const games = [
       noBtn.addEventListener("click", moveNo);
       yesBtn.addEventListener("click", () => {
         answer.textContent =
-          `Yesss ! petit chat , rendez-vous le 14 pour la surprise finale. Reviens chaque jour pour jouer un nouveau jeu. ${kissReward()}`;
+          `Yesss ! petit chat , rendez-vous le 14 pour la surprise finale. Reviens chaque jour pour jouer un nouveau jeu. ${getReward(dayIndex)}`;
       });
 
       return () => {};
@@ -76,7 +77,7 @@ const games = [
   {
     id: 2,
     title: "Coeur éclatant",
-    render(container) {
+    render(container, dayIndex) {
       container.innerHTML = `
         <div class="game-panel">
           <h3>Coeur éclatant</h3>
@@ -121,7 +122,7 @@ const games = [
             clearInterval(intervalId);
             heartBtn.disabled = true;
             if (clicks >= 10) {
-              resultEl.textContent = `Bravo ! Coeur illumine. ${kissReward()}`;
+              resultEl.textContent = `Bravo ! Coeur illumine. ${getReward(dayIndex)}`;
             } else {
               resultEl.textContent = "Presque ! Reessaie.";
             }
@@ -132,7 +133,7 @@ const games = [
       heartBtn.addEventListener("click", () => {
         clicks += 1;
         if (clicks >= 10) {
-          resultEl.textContent = `Bravo ! Tu as reussi. ${kissReward()}`;
+          resultEl.textContent = `Bravo ! Tu as reussi. ${getReward(dayIndex)}`;
         }
       });
       startBtn.addEventListener("click", start);
@@ -145,7 +146,7 @@ const games = [
   {
     id: 3,
     title: "Mot melange",
-    render(container) {
+    render(container, dayIndex) {
       const word = "je suis fou de ton gros pétard";
       const scrambled = word
         .split("")
@@ -171,7 +172,7 @@ const games = [
 
       check.addEventListener("click", () => {
         if (input.value.trim().toLowerCase() === word) {
-          result.textContent = `Parfait ! ${kissReward()}`;
+          result.textContent = `Parfait ! ${getReward(dayIndex)}`;
         } else {
           result.textContent = "Pas encore. Reessaie.";
         }
@@ -183,7 +184,7 @@ const games = [
   {
     id: 4,
     title: "Mini quiz",
-    render(container) {
+    render(container, dayIndex) {
       container.innerHTML = `
         <div class="game-panel">
           <h3>Mini quiz Saint Valentin</h3>
@@ -229,7 +230,7 @@ const games = [
         if (answers.q3 === "a") score += 1;
 
         if (score === 3) {
-          result.textContent = `Tu as tout bon. Tu es adorable, petit chat. ${kissReward()}`;
+          result.textContent = `Tu as tout bon. Tu es adorable, petit chat. ${getReward(dayIndex)}`;
         } else {
           result.textContent = `Score: ${score}/3. Reessaie  ?`;
         }
@@ -241,7 +242,7 @@ const games = [
   {
     id: 5,
     title: "Devine le nombre",
-    render(container) {
+    render(container, dayIndex) {
       const secret = Math.floor(Math.random() * 14) + 1;
       container.innerHTML = `
         <div class="game-panel">
@@ -266,7 +267,7 @@ const games = [
           return;
         }
         if (value === secret) {
-          result.textContent = `Bravo ! C'etait ${secret}. ${kissReward()}`;
+          result.textContent = `Bravo ! C'etait ${secret}. ${getReward(dayIndex)}`;
           btn.disabled = true;
         } else if (value < secret) {
           result.textContent = "Plus grand.";
@@ -281,7 +282,7 @@ const games = [
   {
     id: 6,
     title: "Reaction rapide",
-    render(container) {
+    render(container, dayIndex) {
       container.innerHTML = `
         <div class="game-panel">
           <h3>Reaction rapide</h3>
@@ -319,7 +320,7 @@ const games = [
         startTime = null;
         result.textContent = `Temps: ${reaction} ms. ${
           reaction < 350 ? "Ultra rapide !" : "Bien joue !"
-        } ${kissReward()}`;
+        } ${getReward(dayIndex)}`;
       });
 
       return () => {
@@ -330,7 +331,7 @@ const games = [
   {
     id: 7,
     title: "Message final",
-    render(container) {
+    render(container, dayIndex) {
       container.innerHTML = `
         <div class="game-panel">
           <h3>Message final</h3>
@@ -386,7 +387,7 @@ const games = [
         if (elapsed >= durationMs) {
           reset();
           kissResult.textContent =
-            `Bisou de 14 secondes valide. Tu es mon petit chat, Lisa. ${kissReward()}`;
+            `Bisou de 14 secondes valide. Tu es mon petit chat, Lisa. ${getReward(dayIndex)}`;
         }
       };
 
@@ -461,7 +462,7 @@ const openGame = (index) => {
   const game = games[index];
   if (!game) return;
   if (cleanupFn) cleanupFn();
-  cleanupFn = game.render(gameContent);
+  cleanupFn = game.render(gameContent, index);
   gameTitle.textContent = `Jour ${index + 1} – ${game.title}`;
 };
 
