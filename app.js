@@ -161,6 +161,7 @@ const games = [
           <p>Remets la phrase dans le bon ordre :</p>
           <p><strong>${scrambled}</strong></p>
           <p class="hint">Indice : 🍑</p>
+          <p class="hint">N'hesite pas a echanger plus d'indices contre des bouts de petites culottes.</p>
           <input class="input" id="wordInput" placeholder="Ta reponse exacte" />
           <div class="btn-row">
             <button class="btn" id="checkWord">Verifier</button>
