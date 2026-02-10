@@ -396,3 +396,56 @@ renderDays();
     }
   });
 })();
+
+(function () {
+  const container = document.getElementById("heartsContainer");
+  if (!container) return;
+  const hearts = ["❤️", "💕", "💗", "💖", "💝"];
+  const count = 18;
+  const items = [];
+
+  const rand = (min, max) => min + Math.random() * (max - min);
+
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement("span");
+    el.className = "heart";
+    el.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+    el.style.left = rand(0, 100) + "%";
+    el.style.top = rand(0, 100) + "%";
+    container.appendChild(el);
+    const size = 0.8 + Math.random() * 1.2;
+    items.push({
+      el,
+      x: rand(0, 100),
+      y: rand(0, 100),
+      vx: rand(-0.08, 0.08),
+      vy: rand(-0.08, 0.08),
+      size,
+    });
+  }
+
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+
+  const tick = () => {
+    w = window.innerWidth;
+    h = window.innerHeight;
+    const heartSizePercent = 4;
+    items.forEach((item) => {
+      let { x, y, vx, vy } = item;
+      x += vx;
+      y += vy;
+      if (x <= 0) { x = 0; item.vx = -vx; }
+      else if (x >= 100 - heartSizePercent) { x = 100 - heartSizePercent; item.vx = -vx; }
+      if (y <= 0) { y = 0; item.vy = -vy; }
+      else if (y >= 100 - heartSizePercent) { y = 100 - heartSizePercent; item.vy = -vy; }
+      item.x = x;
+      item.y = y;
+      item.el.style.left = x + "%";
+      item.el.style.top = y + "%";
+      item.el.style.fontSize = (item.size * 1.5) + "rem";
+    });
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+})();

@@ -2,6 +2,21 @@
   box-sizing: border-box;
 }
 
+.hearts-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hearts-container .heart {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.6;
+  user-select: none;
+}
+
 body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -10,6 +25,8 @@ body {
 }
 
 .app {
+  position: relative;
+  z-index: 1;
   max-width: 980px;
   margin: 0 auto;
   padding: 24px;
@@ -254,6 +271,8 @@ body {
 }
 
 .footer {
+  position: relative;
+  z-index: 1;
   text-align: center;
   padding: 20px 0 30px;
   color: #8a4b5a;
