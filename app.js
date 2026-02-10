@@ -187,56 +187,39 @@ const games = [
   },
   {
     id: 4,
-    title: "Mini quiz",
+    title: "Charade",
     render(container, dayIndex) {
       container.innerHTML = `
         <div class="game-panel">
-          <h3>Mini quiz Saint Valentin</h3>
-          <p>3 bonnes reponses et tu gagnes un compliment, petit chat.</p>
-          <form id="quizForm">
-            <div>
-              <p>1) Quel est mon joueur prefere ?</p>
-              <label><input type="radio" name="q1" value="a" /> Messi</label><br />
-              <label><input type="radio" name="q1" value="b" /> Ronaldo</label><br />
-              <label><input type="radio" name="q1" value="c" /> Neymar</label>
-            </div>
-            <div>
-              <p>2) Qui est le plus fort entre Messi et Ronaldo ?</p>
-              <label><input type="radio" name="q2" value="a" /> Messi</label><br />
-              <label><input type="radio" name="q2" value="b" /> Ronaldo</label>
-            </div>
-            <div>
-              <p>3) Barca ou Real ?</p>
-              <label><input type="radio" name="q3" value="a" /> Barca</label><br />
-              <label><input type="radio" name="q3" value="b" /> Real</label>
-            </div>
-            <div class="btn-row">
-              <button class="btn" type="submit">Valider</button>
-            </div>
-          </form>
-          <div id="quizResult" class="hint"></div>
+          <h3>Charade</h3>
+          <p>Résous cette charade, petit chat. Entre le mot en minuscules.</p>
+          <div class="charade">
+            <p>Mon premier est postérieur.</p>
+            <p>Mon second est un fleuve d'Égypte.</p>
+            <p>Mon troisième avait un violon.</p>
+            <p>Mon dernier représente les États-Unis.</p>
+            <p><em>Et mon tout, les femmes l'adorent.</em></p>
+          </div>
+          <input class="input" id="charadeInput" placeholder="Ta réponse (un seul mot)" />
+          <div class="btn-row">
+            <button class="btn" id="charadeCheck">Vérifier</button>
+          </div>
+          <div id="charadeResult" class="hint"></div>
         </div>
       `;
 
-      const form = container.querySelector("#quizForm");
-      const result = container.querySelector("#quizResult");
+      const input = container.querySelector("#charadeInput");
+      const check = container.querySelector("#charadeCheck");
+      const result = container.querySelector("#charadeResult");
+      const normalize = (s) => s.trim().toLowerCase().replace(/\s+/g, " ").replace(/\.+$/, "");
 
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const answers = {
-          q1: form.q1.value,
-          q2: form.q2.value,
-          q3: form.q3.value,
-        };
-        let score = 0;
-        if (answers.q1 === "a") score += 1;
-        if (answers.q2 === "a") score += 1;
-        if (answers.q3 === "a") score += 1;
-
-        if (score === 3) {
-          result.textContent = `Tu as tout bon. Tu es adorable, petit chat. ${getReward(dayIndex)}`;
+      check.addEventListener("click", () => {
+        const answer = normalize(input.value);
+        const ok = answer === "cunnilingus";
+        if (ok) {
+          result.textContent = `Bravo, tu as trouvé. Ta récompense, c'est le mot trouvé.`;
         } else {
-          result.textContent = `Score: ${score}/3. Reessaie  ?`;
+          result.textContent = "Ce n'est pas ça. Réfléchis à chaque partie.";
         }
       });
 
@@ -245,41 +228,13 @@ const games = [
   },
   {
     id: 5,
-    title: "Devine le nombre",
+    title: "Jeudi",
     render(container, dayIndex) {
-      const secret = Math.floor(Math.random() * 14) + 1;
       container.innerHTML = `
-        <div class="game-panel">
-          <h3>Devine le nombre (1 a 14)</h3>
-          <p>Tu peux essayer autant que tu veux.</p>
-          <input class="input" id="guessInput" type="number" min="1" max="14" />
-          <div class="btn-row">
-            <button class="btn" id="guessBtn">Tester</button>
-          </div>
-          <div id="guessResult" class="hint"></div>
+        <div class="game-panel game-panel--message">
+          <p class="final-message">Il n'y a plus d'eau chaude, zuttt !</p>
         </div>
       `;
-
-      const input = container.querySelector("#guessInput");
-      const btn = container.querySelector("#guessBtn");
-      const result = container.querySelector("#guessResult");
-
-      btn.addEventListener("click", () => {
-        const value = Number(input.value);
-        if (!value || value < 1 || value > 14) {
-          result.textContent = "Entre un nombre entre 1 et 14.";
-          return;
-        }
-        if (value === secret) {
-          result.textContent = `Bravo ! C'etait ${secret}. ${getReward(dayIndex)}`;
-          btn.disabled = true;
-        } else if (value < secret) {
-          result.textContent = "Plus grand.";
-        } else {
-          result.textContent = "Plus petit.";
-        }
-      });
-
       return () => {};
     },
   },
@@ -334,93 +289,45 @@ const games = [
   },
   {
     id: 7,
-    title: "Message final",
+    title: "Poème secret",
     render(container, dayIndex) {
+      const isLastDay = dayIndex === 6;
       container.innerHTML = `
         <div class="game-panel">
-          <h3>Message final</h3>
-          <p>Le dernier jeu, c'est un bisou de 14 secondes.</p>
-          <div id="kissArea">
-            <p>Maintiens le bouton enfonce 14 secondes.</p>
-            <div class="btn-row">
-              <button class="btn" id="kissBtn">Bisou 14s</button>
-            </div>
-            <div id="kissTimer" class="hint kiss-timer"></div>
-            <div class="kiss-progress">
-              <div id="kissBar" class="kiss-bar"></div>
-            </div>
-            <div id="kissResult" class="hint"></div>
+          <h3>Poème secret</h3>
+          <p>Ce poème cache un mot. Trouve-le, petit chat. Fais attention à la qualité du poème.</p>
+          <div class="poem">
+            <p>Tu es mon paradis,</p>
+            <p>Tu es tout mon amour,</p>
+            <p>Ton visage illumine mes nuits,</p>
+            <p>Ton sourire est doux,</p>
+            <p>Tu vaut plus que de l'or,</p>
+            <p>Tu es ma reine,</p>
+            <p>Je te donne mon âme.</p>
           </div>
+          <input class="input" id="poemInput" placeholder="Le mot secret" />
+          <div class="btn-row">
+            <button class="btn" id="poemCheck">Verifier</button>
+          </div>
+          <div id="poemResult" class="hint"></div>
+          ${isLastDay ? '<p class="final-message" style="margin-top:20px">Et ce soir, on se retrouve pour une belle soirée. Je t\'aime, Lisa. ❤️</p>' : ""}
         </div>
       `;
 
-      const kissArea = container.querySelector("#kissArea");
-      const kissBtn = container.querySelector("#kissBtn");
-      const kissTimer = container.querySelector("#kissTimer");
-      const kissResult = container.querySelector("#kissResult");
-      const kissBar = container.querySelector("#kissBar");
+      const input = container.querySelector("#poemInput");
+      const check = container.querySelector("#poemCheck");
+      const result = container.querySelector("#poemResult");
 
-      const today = new Date();
-      const isWeekend = today.getDay() === 6 || today.getDay() === 0;
-
-      if (!isWeekend) {
-        kissArea.innerHTML = `
-          <p>Ce jeu est reserve au week-end pour un bisou parfait.</p>
-          <div class="hint">Reviens samedi ou dimanche pour le debloquer.</div>
-        `;
-        return () => {};
-      }
-
-      let intervalId = null;
-      let startTime = null;
-      const durationMs = 14000;
-
-      const reset = () => {
-        if (intervalId) clearInterval(intervalId);
-        intervalId = null;
-        startTime = null;
-        kissTimer.textContent = "";
-        kissBar.style.width = "0%";
-      };
-
-      const updateTimer = () => {
-        const elapsed = Date.now() - startTime;
-        const remaining = Math.max(0, durationMs - elapsed);
-        kissTimer.textContent = `Encore ${Math.ceil(remaining / 1000)}s...`;
-        kissBar.style.width = `${Math.min(100, (elapsed / durationMs) * 100)}%`;
-        if (elapsed >= durationMs) {
-          reset();
-          kissResult.textContent =
-            `Bisou de 14 secondes valide. Tu es mon petit chat, Lisa. ${getReward(dayIndex)}`;
+      check.addEventListener("click", () => {
+        const answer = input.value.trim().toLowerCase();
+        if (answer === "pandora") {
+          result.textContent = `Tu as trouvé le mot secret. Mais ce n'est pas finis tu devras faire 1 bisou au maitre du jeu pour débloquer ta récompense)}`;
+        } else {
+          result.textContent = "Ce n'est pas ça.";
         }
-      };
+      });
 
-      const startHold = () => {
-        kissResult.textContent = "";
-        startTime = Date.now();
-        updateTimer();
-        intervalId = setInterval(updateTimer, 200);
-      };
-
-      const cancelHold = () => {
-        if (!startTime) return;
-        if (Date.now() - startTime < durationMs) {
-          kissResult.textContent =
-            "Trop court ! Reessaie et tiens 14 secondes, petit chat.";
-        }
-        reset();
-      };
-
-      kissBtn.addEventListener("mousedown", startHold);
-      kissBtn.addEventListener("touchstart", startHold);
-      kissBtn.addEventListener("mouseup", cancelHold);
-      kissBtn.addEventListener("mouseleave", cancelHold);
-      kissBtn.addEventListener("touchend", cancelHold);
-      kissBtn.addEventListener("touchcancel", cancelHold);
-
-      return () => {
-        if (intervalId) clearInterval(intervalId);
-      };
+      return () => {};
     },
   },
 ];

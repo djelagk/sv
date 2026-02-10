@@ -122,6 +122,68 @@ body {
   color: #c2185b;
 }
 
+.game-panel .poem {
+  margin: 16px 0;
+  line-height: 1.8;
+  font-style: italic;
+  color: #5c3a42;
+}
+
+.game-panel .poem p {
+  margin: 4px 0;
+}
+
+.game-panel .charade {
+  margin: 16px 0;
+  line-height: 1.8;
+  color: #5c3a42;
+}
+
+.game-panel .charade p {
+  margin: 8px 0;
+}
+
+.game-panel .charade em {
+  display: block;
+  margin-top: 12px;
+  font-style: italic;
+  color: #c2185b;
+}
+
+.game-panel--message .final-message {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin: 12px 0;
+  color: #5c3a42;
+}
+
+.game-panel .rebus {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 20px 0;
+  align-items: center;
+}
+
+.game-panel .rebus-part {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.game-panel .rebus-letter {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #c2185b;
+  letter-spacing: 0.05em;
+}
+
+.game-panel .rebus-emoji {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
 .btn-row {
   display: flex;
   gap: 12px;
