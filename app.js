@@ -8,7 +8,8 @@ let cleanupFn = null;
 
 const devUnlockAll = window.__UNLOCK__ === true;
 let secretUnlock = false;
-const allUnlocked = () => devUnlockAll || secretUnlock;
+let apiUnlock = false;
+const allUnlocked = () => devUnlockAll || secretUnlock || apiUnlock;
 
 const formatDate = (date) =>
   date.toLocaleDateString("fr-FR", {
@@ -240,51 +241,17 @@ const games = [
   },
   {
     id: 6,
-    title: "Reaction rapide",
+    title: "Blanche neige",
     render(container, dayIndex) {
       container.innerHTML = `
-        <div class="game-panel">
-          <h3>Reaction rapide</h3>
-          <p>Appuie des que le bouton "Je t'aime mon roi" apparait.</p>
-          <div class="btn-row">
-            <button class="btn" id="startReaction">Lancer</button>
-            <button class="btn secondary" id="reactionBtn" disabled>Je t'aime mon roi</button>
-          </div>
-          <div id="reactionResult" class="hint"></div>
+        <div class="game-panel game-panel--message">
+          <p class="final-message">Je reflète sans jamais juger,</p>
+          <p class="final-message">Je montre sans jamais parler.</p>
+          <p class="final-message">Je garde les secrets des visages,</p>
+          <p class="final-message">Et pourtant je ne suis qu’un passage.</p>
         </div>
       `;
-
-      const startBtn = container.querySelector("#startReaction");
-      const reactionBtn = container.querySelector("#reactionBtn");
-      const result = container.querySelector("#reactionResult");
-
-      let timeoutId = null;
-      let startTime = null;
-
-      startBtn.addEventListener("click", () => {
-        result.textContent = "Attends...";
-        reactionBtn.disabled = true;
-        const delay = 1000 + Math.random() * 2000;
-        timeoutId = setTimeout(() => {
-          startTime = Date.now();
-          reactionBtn.disabled = false;
-          result.textContent = "Clique maintenant !";
-        }, delay);
-      });
-
-      reactionBtn.addEventListener("click", () => {
-        if (!startTime) return;
-        const reaction = Date.now() - startTime;
-        reactionBtn.disabled = true;
-        startTime = null;
-        result.textContent = `Temps: ${reaction} ms. ${
-          reaction < 350 ? "Ultra rapide !" : "Bien joue !"
-        } ${getReward(dayIndex)}`;
-      });
-
-      return () => {
-        if (timeoutId) clearTimeout(timeoutId);
-      };
+      return () => {};
     },
   },
   {
@@ -377,7 +344,31 @@ const openGame = (index) => {
   gameTitle.textContent = `Jour ${index + 1} – ${game.title}`;
 };
 
-renderDays();
+const initUnlockAndRender = async () => {
+  const backendUrl = window.__BACKEND_URL__;
+  const urlParams = new URLSearchParams(window.location.search);
+  const unlockToken = urlParams.get("unlock");
+
+  if (unlockToken && backendUrl) {
+    window.location.href = `${backendUrl}/unlock?token=${encodeURIComponent(unlockToken)}`;
+    return;
+  }
+
+  if (backendUrl) {
+    try {
+      const res = await fetch(`${backendUrl}/api/unlock-status`, {
+        credentials: "include",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        apiUnlock = data.unlocked === true;
+      }
+    } catch (_) {}
+  }
+  renderDays();
+};
+
+initUnlockAndRender();
 
 (function () {
   const footer = document.querySelector(".footer p");

@@ -6,6 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "node server.js",
+    "start:ngrok": "node start-with-ngrok.js",
     "watch": "bash watchdog.sh"
   }
 }

@@ -8,12 +8,12 @@ Mini application web pour la Saint Valentin, avec 7 jeux debloques jour par jour
 npm start
 ```
 
-Puis ouvre : `http://localhost:3000`
+Puis ouvre : `http://localhost:3005`
 
 ## Mode dev (tout debloquer)
 
-- URL : `http://localhost:3000/?unlock=petitchat`
-- Ou version persistante : `http://localhost:3000/unlock?token=petitchat`
+- URL : `http://localhost:3005/?unlock=petitchat`
+- Ou version persistante : `http://localhost:3005/unlock?token=petitchat`
 
 Pour changer le code secret :
 
@@ -42,15 +42,45 @@ Sous-domaine personnalise :
 npx localtunnel --port 3000 --subdomain ton-nom
 ```
 
+## Acces exterieur avec ngrok
+
+Pour exposer l’app sur Internet avec **ngrok** (backend et frontend sur des URLs ngrok distinctes) :
+
+1. Installer ngrok : https://ngrok.com/download
+
+2. Lancer avec ngrok (2 tunnels) :
+```bash
+npm run start:ngrok
+```
+
+Le script demarre backend (port 3005), frontend (port 3000), ngrok, recupere les URLs et redemarre les serveurs avec la bonne config.
+
+**Note :** ngrok gratuit = 1 tunnel. Pour 2 tunnels, il faut un compte ngrok payant. Alternative : `npm start` + `ngrok http 3005` pour un seul tunnel (mode serveur unique).
+
+### URLs obtenues
+
+- **Frontend** : `https://xxx.ngrok-free.app` (ou similaire)
+- **Backend** : `https://yyy.ngrok-free.app`
+- **Unlock** : `https://yyy.ngrok-free.app/unlock?token=petitchat`
+- **Interface ngrok** : http://127.0.0.1:4040
+
+### Demarrage manuel (2 terminaux)
+
+```bash
+# Terminal 1 – Backend (remplace par ton URL frontend ngrok)
+FRONTEND_URL=https://xxx.ngrok-free.app node backend.js
+
+# Terminal 2 – Frontend (remplace par ton URL backend ngrok)
+BACKEND_URL=https://yyy.ngrok-free.app node frontend.js
+```
+
 ## Logs
 
 Toutes les tentatives sont journalisees dans `access.log`.
 
 Consulter via URL :
-
-```
-http://localhost:3000/logs?token=petitchatlogs
-```
+- Mode serveur unique : `http://localhost:3005/logs?token=petitchatlogs`
+- Mode ngrok : `https://[ton-backend-ngrok]/logs?token=petitchatlogs`
 
 Changer le token :
 
